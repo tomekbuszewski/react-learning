@@ -62,33 +62,33 @@
 	var React = __webpack_require__(3);
 	var ReactDOM = __webpack_require__(160);
 	var classNames = __webpack_require__(161);
-
 	var app = document.getElementById('app');
+
+	var server = new _Firebase2.default('https://tomekbuszewski.firebaseio.com/');
 
 	var HelloWorld = React.createClass({
 	  displayName: 'HelloWorld',
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      database: null,
 	      loadingClass: true,
-	      name: null
+	      name: null,
+	      address: null
 	    };
 	  },
 
 	  componentDidMount: function componentDidMount() {
-	    var serverRequest = new _Firebase2.default('https://tomekbuszewski.firebaseio.com/');
-	    serverRequest.on('value', function (data) {
+	    server.on('value', function (data) {
+	      var db = data.val();
 	      this.setState({
-	        database: data.val(),
 	        loadingClass: false,
-	        name: data.val().name
+	        name: db.name,
+	        address: db.address.city
 	      });
 	    }.bind(this));
 	  },
 
 	  render: function render() {
-	    console.log(this.state.database);
 	    var classes = classNames({
 	      'container': true,
 	      'loading': this.state.loadingClass,
@@ -102,6 +102,11 @@
 	        'h1',
 	        null,
 	        this.state.name
+	      ),
+	      React.createElement(
+	        'pre',
+	        null,
+	        this.state.address
 	      )
 	    );
 	  }
