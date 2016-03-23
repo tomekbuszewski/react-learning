@@ -77,7 +77,8 @@
 	    };
 	  },
 
-	  componentDidMount: function componentDidMount() {
+	  getData: function getData() {
+	    /* or componentDidMount */
 	    server.on('value', function (data) {
 	      var db = data.val();
 	      this.setState({
@@ -86,6 +87,10 @@
 	        address: db.address.city
 	      });
 	    }.bind(this));
+	  },
+
+	  handleClick: function handleClick() {
+	    alert('bam');
 	  },
 
 	  render: function render() {
@@ -97,16 +102,25 @@
 
 	    return React.createElement(
 	      'div',
-	      { className: classes },
+	      null,
 	      React.createElement(
-	        'h1',
-	        null,
-	        this.state.name
+	        'button',
+	        { onMouseDown: this.getData },
+	        'Get data'
 	      ),
 	      React.createElement(
-	        'pre',
-	        null,
-	        this.state.address
+	        'div',
+	        { className: classes },
+	        React.createElement(
+	          'h1',
+	          null,
+	          this.state.name
+	        ),
+	        React.createElement(
+	          'pre',
+	          null,
+	          this.state.address
+	        )
 	      )
 	    );
 	  }

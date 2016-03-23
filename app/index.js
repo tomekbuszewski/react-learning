@@ -15,7 +15,7 @@ var HelloWorld = React.createClass({
     };
   },
 
-  componentDidMount: function() {
+  getData: function() { /* or componentDidMount */
     server.on('value', function(data) {
       const db = data.val();
       this.setState({
@@ -26,6 +26,10 @@ var HelloWorld = React.createClass({
     }.bind(this));
   },
 
+  handleClick: function() {
+    alert('bam');
+  },
+
 	render: function () {
     let classes = classNames({
       'container': true,
@@ -34,9 +38,12 @@ var HelloWorld = React.createClass({
     });
 
 		return (
-			<div className={classes}>
-				<h1>{this.state.name}</h1>
-        <pre>{this.state.address}</pre>
+			<div>
+        <button onMouseDown={this.getData}>Get data</button>
+        <div className={classes}>
+  				<h1>{this.state.name}</h1>
+          <pre>{this.state.address}</pre>
+        </div>
 			</div>
 		)
 	}
