@@ -61,6 +61,7 @@
 
 	var React = __webpack_require__(3);
 	var ReactDOM = __webpack_require__(160);
+	var classNames = __webpack_require__(161);
 
 	var app = document.getElementById('app');
 
@@ -69,7 +70,8 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      database: ''
+	      database: '',
+	      loadingClass: true
 	    };
 	  },
 
@@ -77,14 +79,20 @@
 	    var serverRequest = new _Firebase2.default('https://intense-torch-9229.firebaseio.com/');
 	    serverRequest.on('value', function (data) {
 	      this.setState({
-	        database: data.val()
+	        database: data.val(),
+	        loadingClass: false
 	      });
 	    }.bind(this));
 	  },
 
 	  render: function render() {
 	    console.log(this.state.database);
-	    return React.createElement('div', { className: 'container' });
+	    var classes = classNames({
+	      'container': true,
+	      '--loading': this.state.loadingClass
+	    });
+
+	    return React.createElement('div', { className: classes });
 	  }
 	});
 
@@ -19974,6 +19982,60 @@
 	'use strict';
 
 	module.exports = __webpack_require__(5);
+
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
 
 
 /***/ }

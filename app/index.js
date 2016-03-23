@@ -1,12 +1,14 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
+const classNames = require('classnames');
 import Firebase from 'Firebase';
 const app = document.getElementById('app');
 
 var HelloWorld = React.createClass({
   getInitialState: function() {
     return {
-      database: ''
+      database: '',
+      loadingClass: true
     };
   },
 
@@ -14,16 +16,21 @@ var HelloWorld = React.createClass({
     var serverRequest = new Firebase('https://intense-torch-9229.firebaseio.com/');
     serverRequest.on('value', function(data) {
       this.setState({
-        database: data.val()
+        database: data.val(),
+        loadingClass: false
       });
     }.bind(this));
   },
 
 	render: function () {
     console.log(this.state.database);
-		return (
-			<div className="container">
+    let classes = classNames({
+      'container': true,
+      '--loading': this.state.loadingClass
+    });
 
+		return (
+			<div className={classes}>
 			</div>
 		)
 	}
