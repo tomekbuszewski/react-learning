@@ -7,17 +7,19 @@ const app = document.getElementById('app');
 var HelloWorld = React.createClass({
   getInitialState: function() {
     return {
-      database: '',
-      loadingClass: true
+      database: null,
+      loadingClass: true,
+			name: null
     };
   },
 
   componentDidMount: function() {
-    var serverRequest = new Firebase('https://intense-torch-9229.firebaseio.com/');
+    var serverRequest = new Firebase('https://tomekbuszewski.firebaseio.com/');
     serverRequest.on('value', function(data) {
       this.setState({
         database: data.val(),
-        loadingClass: false
+        loadingClass: false,
+				name: data.val().name
       });
     }.bind(this));
   },
@@ -26,11 +28,13 @@ var HelloWorld = React.createClass({
     console.log(this.state.database);
     let classes = classNames({
       'container': true,
-      '--loading': this.state.loadingClass
+      'loading': this.state.loadingClass,
+			'loaded' : !this.state.loadingClass
     });
 
 		return (
 			<div className={classes}>
+				<h1>{this.state.name}</h1>
 			</div>
 		)
 	}

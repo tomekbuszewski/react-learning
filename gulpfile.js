@@ -1,13 +1,14 @@
 var gulp = require('gulp');
+var webpack = require('webpack-stream');
 var browserSync = require('browser-sync');
 var sass = require('gulp-sass');
-var shell = require('gulp-shell');
 
 var paths = {
   sass: './app/_sass',
   css: './dist/_css',
   js: './app/**.js',
-  jsProd: './dist/index_bundle.js'
+  jsProd: './dist',
+  jsProdFile: './dist/index_bundle.js'
 };
 
 gulp.task('sass', function() {
@@ -18,8 +19,9 @@ gulp.task('sass', function() {
 });
 
 gulp.task('webpack', function() {
-  return gulp.src(paths.js)
-    .pipe(shell('webpack'));
+	return gulp.src(paths.js)
+    .pipe(webpack(require('./webpack.config.js')))
+    .pipe(gulp.dest(paths.jsProd));
 });
 
 gulp.task('watch', ['sass', 'webpack'], function() {
@@ -30,9 +32,9 @@ gulp.task('watch', ['sass', 'webpack'], function() {
     }
   });
 
-  gulp.watch(paths.sass, ['sass']);
+  gulp.watch(paths.sass + '/**', ['sass']);
   gulp.watch(paths.js, ['webpack']);
-  gulp.watch(paths.jsProd).on('change', browserSync.reload);
+  gulp.watch(paths.jsProdFile).on('change', browserSync.reload);
 });
 
 gulp.task('default', ['watch']);

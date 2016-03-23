@@ -70,17 +70,19 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      database: '',
-	      loadingClass: true
+	      database: null,
+	      loadingClass: true,
+	      name: null
 	    };
 	  },
 
 	  componentDidMount: function componentDidMount() {
-	    var serverRequest = new _Firebase2.default('https://intense-torch-9229.firebaseio.com/');
+	    var serverRequest = new _Firebase2.default('https://tomekbuszewski.firebaseio.com/');
 	    serverRequest.on('value', function (data) {
 	      this.setState({
 	        database: data.val(),
-	        loadingClass: false
+	        loadingClass: false,
+	        name: data.val().name
 	      });
 	    }.bind(this));
 	  },
@@ -89,10 +91,19 @@
 	    console.log(this.state.database);
 	    var classes = classNames({
 	      'container': true,
-	      '--loading': this.state.loadingClass
+	      'loading': this.state.loadingClass,
+	      'loaded': !this.state.loadingClass
 	    });
 
-	    return React.createElement('div', { className: classes });
+	    return React.createElement(
+	      'div',
+	      { className: classes },
+	      React.createElement(
+	        'h1',
+	        null,
+	        this.state.name
+	      )
+	    );
 	  }
 	});
 
