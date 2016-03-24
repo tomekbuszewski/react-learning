@@ -1,13 +1,13 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Firebase from 'Firebase';
+
 const classNames = require('classnames');
 const app = document.getElementById('app');
 
-import Firebase from 'Firebase';
-
 class NewWorld extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.name = 'Ewa';
 
     this.callByName = this.callByName.bind(this); /* Or bind directly when calling */
@@ -31,7 +31,7 @@ var HelloWorld = React.createClass({
   getInitialState: function() {
     return {
       loadingClass: true,
-      name: null,
+        name: null,
       address: null
     };
   },
@@ -52,15 +52,15 @@ var HelloWorld = React.createClass({
     alert('bam');
   },
 
-	render: function () {
+  render: function () {
     let classes = classNames({
       'container': true,
       'loading': this.state.loadingClass,
       'loaded' : !this.state.loadingClass
     });
 
-		return (
-			<div>
+    return (
+      <div>
         <button onMouseDown={this.getData}>Get data</button>
         <div className={classes}>
         <h1>{this.state.name}</h1>
