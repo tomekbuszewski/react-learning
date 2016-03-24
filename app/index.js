@@ -31,7 +31,7 @@ var HelloWorld = React.createClass({
   getInitialState: function() {
     return {
       loadingClass: true,
-			name: null,
+      name: null,
       address: null
     };
   },
@@ -42,7 +42,7 @@ var HelloWorld = React.createClass({
       const db = data.val();
       this.setState({
         loadingClass: false,
-				name: db.name,
+        name: db.name,
         address: db.address.city
       });
     });
@@ -56,20 +56,20 @@ var HelloWorld = React.createClass({
     let classes = classNames({
       'container': true,
       'loading': this.state.loadingClass,
-			'loaded' : !this.state.loadingClass
+      'loaded' : !this.state.loadingClass
     });
 
 		return (
 			<div>
         <button onMouseDown={this.getData}>Get data</button>
         <div className={classes}>
-  				<h1>{this.state.name}</h1>
+        <h1>{this.state.name}</h1>
           <pre>{this.state.address}</pre>
         </div>
         <NewWorld />
-			</div>
-		)
-	}
+      </div>
+    )
+  }
 });
 
 ReactDOM.render(<HelloWorld />, app);
