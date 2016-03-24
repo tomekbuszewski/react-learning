@@ -53,18 +53,67 @@
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _Firebase = __webpack_require__(2);
 
 	var _Firebase2 = _interopRequireDefault(_Firebase);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	var React = __webpack_require__(3);
 	var ReactDOM = __webpack_require__(160);
 	var classNames = __webpack_require__(161);
 	var app = document.getElementById('app');
 
-	var server = new _Firebase2.default('https://tomekbuszewski.firebaseio.com/');
+	var NewWorld = function (_React$Component) {
+	  _inherits(NewWorld, _React$Component);
+
+	  function NewWorld() {
+	    _classCallCheck(this, NewWorld);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NewWorld).call(this));
+
+	    _this.name = 'Ewa';
+
+	    _this.callByName = _this.callByName.bind(_this); /* Or bind directly when calling */
+	    return _this;
+	  }
+
+	  _createClass(NewWorld, [{
+	    key: 'callByName',
+	    value: function callByName() {
+	      alert(this.name);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'h2',
+	          null,
+	          'Hello, ',
+	          this.name
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.callByName },
+	          'Alert'
+	        )
+	      );
+	    }
+	  }]);
+
+	  return NewWorld;
+	}(React.Component);
 
 	var HelloWorld = React.createClass({
 	  displayName: 'HelloWorld',
@@ -78,15 +127,19 @@
 	  },
 
 	  getData: function getData() {
-	    /* or componentDidMount */
+	    var _this2 = this;
+
+	    /* or componentDidMount if needs to be invoked on run */
+	    var server = new _Firebase2.default('https://tomekbuszewski.firebaseio.com/');
 	    server.on('value', function (data) {
+	      /* Or normal function + binding */
 	      var db = data.val();
-	      this.setState({
+	      _this2.setState({
 	        loadingClass: false,
 	        name: db.name,
 	        address: db.address.city
 	      });
-	    }.bind(this));
+	    });
 	  },
 
 	  handleClick: function handleClick() {
@@ -121,7 +174,8 @@
 	          null,
 	          this.state.address
 	        )
-	      )
+	      ),
+	      React.createElement(NewWorld, null)
 	    );
 	  }
 	});

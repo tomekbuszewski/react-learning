@@ -4,7 +4,28 @@ const classNames = require('classnames');
 const app = document.getElementById('app');
 
 import Firebase from 'Firebase';
-const server = new Firebase('https://tomekbuszewski.firebaseio.com/');
+
+class NewWorld extends React.Component {
+  constructor() {
+    super();
+    this.name = 'Ewa';
+
+    this.callByName = this.callByName.bind(this); /* Or bind directly when calling */
+  }
+
+  callByName() {
+    alert(this.name);
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>Hello, {this.name}</h2>
+        <button onClick={this.callByName}>Alert</button>
+      </div>
+    )
+  }
+}
 
 var HelloWorld = React.createClass({
   getInitialState: function() {
@@ -15,15 +36,16 @@ var HelloWorld = React.createClass({
     };
   },
 
-  getData: function() { /* or componentDidMount */
-    server.on('value', function(data) {
+  getData: function() { /* or componentDidMount if needs to be invoked on run */
+    const server = new Firebase('https://tomekbuszewski.firebaseio.com/');
+    server.on('value', (data) => { /* Or normal function + binding */
       const db = data.val();
       this.setState({
         loadingClass: false,
 				name: db.name,
         address: db.address.city
       });
-    }.bind(this));
+    });
   },
 
   handleClick: function() {
@@ -44,6 +66,7 @@ var HelloWorld = React.createClass({
   				<h1>{this.state.name}</h1>
           <pre>{this.state.address}</pre>
         </div>
+        <NewWorld />
 			</div>
 		)
 	}
