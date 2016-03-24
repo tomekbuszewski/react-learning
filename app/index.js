@@ -72,4 +72,72 @@ var HelloWorld = React.createClass({
   }
 });
 
-ReactDOM.render(<HelloWorld />, app);
+// ReactDOM.render(<HelloWorld />, app);
+
+// Fiche
+//---------------------------------------------------
+const fiche = document.getElementById('fiche');
+const ficheServer = new Firebase('https://intense-torch-9229.firebaseio.com/');
+
+class Fiche extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      words: 0,
+      random: 0,
+      data: null,
+      wordPl: null,
+      wordEn: null,
+      answer: null
+    }
+  }
+
+  componentDidMount() {
+    ficheServer.on('value', (data) => {
+      const ficheData = data.val();
+
+      this.setState({
+        words: ficheData.length,
+        data: ficheData
+      }, this.getRandomNumber);
+    });
+  }
+
+  getRandomNumber() {
+    let random = Math.floor(Math.random() * (this.state.words - 1) + 1);
+
+    this.setState({
+      random: random
+    }, this.setWords);
+  }
+
+  setWords() {
+    this.setState({
+      wordEn: this.state.data[this.state.random].en,
+      wordPl: this.state.data[this.state.random].pl
+    })
+  }
+
+  checkWord(event) {
+    let answer = event.target.value;
+    if(answer === this.state.wordPl) {
+      this.getRandomNumber();
+    }
+  }
+
+  render() {
+    return (
+      <section className="container">
+        <p>Słów w bazie: {this.state.words}</p>
+        <p>
+          <strong>{this.state.wordEn}</strong> to po polsku
+          <input value={this.state.answer} type="text" name="ficheText" onChange={this.checkWord.bind(this)} />
+        </p>
+        <button onClick={this.getRandomNumber.bind(this)}>Przeładuj</button>
+      </section>
+    )
+  }
+};
+
+ReactDOM.render(<Fiche />, fiche);

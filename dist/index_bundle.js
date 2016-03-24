@@ -186,7 +186,109 @@
 	  }
 	});
 
-	_reactDom2.default.render(_react2.default.createElement(HelloWorld, null), app);
+	// ReactDOM.render(<HelloWorld />, app);
+
+	// Fiche
+	//---------------------------------------------------
+	var fiche = document.getElementById('fiche');
+	var ficheServer = new _Firebase2.default('https://intense-torch-9229.firebaseio.com/');
+
+	var Fiche = function (_React$Component2) {
+	  _inherits(Fiche, _React$Component2);
+
+	  function Fiche(props) {
+	    _classCallCheck(this, Fiche);
+
+	    var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Fiche).call(this, props));
+
+	    _this3.state = {
+	      words: 0,
+	      random: 0,
+	      data: null,
+	      wordPl: null,
+	      wordEn: null,
+	      answer: null
+	    };
+	    return _this3;
+	  }
+
+	  _createClass(Fiche, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this4 = this;
+
+	      ficheServer.on('value', function (data) {
+	        var ficheData = data.val();
+
+	        _this4.setState({
+	          words: ficheData.length,
+	          data: ficheData
+	        }, _this4.getRandomNumber);
+	      });
+	    }
+	  }, {
+	    key: 'getRandomNumber',
+	    value: function getRandomNumber() {
+	      var random = Math.floor(Math.random() * (this.state.words - 1) + 1);
+
+	      this.setState({
+	        random: random
+	      }, this.setWords);
+	    }
+	  }, {
+	    key: 'setWords',
+	    value: function setWords() {
+	      this.setState({
+	        wordEn: this.state.data[this.state.random].en,
+	        wordPl: this.state.data[this.state.random].pl
+	      });
+	    }
+	  }, {
+	    key: 'checkWord',
+	    value: function checkWord(event) {
+	      var answer = event.target.value;
+	      if (answer === this.state.wordPl) {
+	        this.getRandomNumber();
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'section',
+	        { className: 'container' },
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Słów w bazie: ',
+	          this.state.words
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          _react2.default.createElement(
+	            'strong',
+	            null,
+	            this.state.wordEn
+	          ),
+	          ' to po polsku',
+	          _react2.default.createElement('input', { value: this.state.answer, type: 'text', name: 'ficheText', onChange: this.checkWord.bind(this) })
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: this.getRandomNumber.bind(this) },
+	          'Przeładuj'
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Fiche;
+	}(_react2.default.Component);
+
+	;
+
+	_reactDom2.default.render(_react2.default.createElement(Fiche, null), fiche);
 
 /***/ },
 /* 2 */
