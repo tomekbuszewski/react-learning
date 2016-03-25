@@ -213,7 +213,9 @@
 	      wordEn: null,
 	      answer: null,
 	      ficheInput: null,
-	      loaded: false
+	      loaded: false,
+	      answers: new Set(),
+	      remaining: 0
 	    };
 	    return _this3;
 	  }
@@ -246,24 +248,42 @@
 	  }, {
 	    key: 'setWords',
 	    value: function setWords() {
-	      this.setState({
-	        wordEn: this.state.data[this.state.random].en.toLowerCase(),
-	        wordPl: this.state.data[this.state.random].pl.toLowerCase()
-	      });
+	      var random = this.state.random;
+	      var pl = this.state.data[random].pl.toLowerCase();
+	      var en = this.state.data[random].en.toLowerCase();
+	      var answersSize = this.state.answers.size;
+	      var diff = this.state.words - answersSize - 1;
+
+	      if (diff === 0) {
+	        this.setState({
+	          answers: new Set()
+	        }, this.getRandomNumber);
+	      }
+
+	      if (this.state.answers.has(pl)) {
+	        this.getRandomNumber();
+	      } else {
+	        this.setState({
+	          wordEn: this.state.data[this.state.random].en.toLowerCase(),
+	          wordPl: this.state.data[this.state.random].pl.toLowerCase(),
+	          remaining: diff
+	        });
+	      }
 	    }
 	  }, {
 	    key: 'checkWord',
 	    value: function checkWord(event) {
 	      var _this5 = this;
 
-	      var answer = event.target.value.toLowerCase();
+	      var answer = event.target.value.toLowerCase().trim();
 	      if (answer === this.state.wordPl) {
 	        setTimeout(function () {
 	          _this5.success();
 	        }, 1000);
 
 	        this.setState({
-	          loaded: false
+	          loaded: false,
+	          answers: this.state.answers.add(answer)
 	        });
 	      }
 	    }
@@ -296,8 +316,8 @@
 	        _react2.default.createElement(
 	          'p',
 	          { className: 'fiche__counter' },
-	          'Słów w bazie: ',
-	          this.state.words
+	          'Pozostało: ',
+	          this.state.remaining
 	        ),
 	        _react2.default.createElement(
 	          'form',
@@ -318,7 +338,8 @@
 	            _react2.default.createElement('input', {
 	              className: 'fiche__input',
 	              value: this.state.answer,
-	              type: 'text', name: 'ficheText',
+	              type: 'text',
+	              name: 'ficheText',
 	              onChange: this.checkWord.bind(this),
 	              id: 'ficheInput'
 	            })

@@ -78,7 +78,7 @@ var HelloWorld = React.createClass({
 //---------------------------------------------------
 /* TOOD
   1. Answer to lowercase                         [x]
-  2. Base of answered words
+  2. Base of answered words                      [x]
 */
 const fiche = document.getElementById('fiche');
 const ficheServer = new Firebase('https://intense-torch-9229.firebaseio.com/');
@@ -95,7 +95,9 @@ class Fiche extends React.Component {
       wordEn: null,
       answer: null,
       ficheInput: null,
-      loaded: false
+      loaded: false,
+      answers: new Set(),
+      remaining: 0
     }
   }
 
@@ -121,20 +123,38 @@ class Fiche extends React.Component {
   }
 
   setWords() {
-    this.setState({
-      wordEn: this.state.data[this.state.random].en.toLowerCase(),
-      wordPl: this.state.data[this.state.random].pl.toLowerCase()
-    })
+    let random = this.state.random;
+    let pl = this.state.data[random].pl.toLowerCase();
+    let en = this.state.data[random].en.toLowerCase();
+    let answersSize = this.state.answers.size;
+    let diff = (this.state.words - answersSize - 1);
+
+    if(diff === 0) {
+      this.setState({
+        answers: new Set()
+      }, this.getRandomNumber);
+    }
+
+    if(this.state.answers.has(pl)) {
+      this.getRandomNumber();
+    } else {
+      this.setState({
+        wordEn: this.state.data[this.state.random].en.toLowerCase(),
+        wordPl: this.state.data[this.state.random].pl.toLowerCase(),
+        remaining: diff
+      });
+    }
   }
 
   checkWord(event) {
-    let answer = event.target.value.toLowerCase();
+    let answer = event.target.value.toLowerCase().trim();
     if(answer === this.state.wordPl) {
       setTimeout(() => { this.success(); }, 1000);
 
       this.setState({
-        loaded: false
-      })
+        loaded: false,
+        answers: this.state.answers.add(answer)
+      });
     }
   }
 
@@ -159,7 +179,7 @@ class Fiche extends React.Component {
 
     return (
       <section className={containerClass}>
-        <p className="fiche__counter">Słów w bazie: {this.state.words}</p>
+        <p className="fiche__counter">Pozostało: {this.state.remaining}</p>
         <form className="fiche__answer-field" action="">
           <p>
             <strong className="fiche__question">{this.state.wordEn}</strong> to po polsku
