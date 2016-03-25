@@ -129,15 +129,16 @@ class Fiche extends React.Component {
     let pl = this.state.data[random].pl.toLowerCase();
     let en = this.state.data[random].en.toLowerCase();
     let answersSize = this.state.answers.size;
-    let diff = (this.state.words - answersSize - 1);
+    let diff = (this.state.words - answersSize - 1); /* Minus one because at the start there are no answers */
 
+    /* If there are no more words, component will reset itself */
     if(diff === 0) {
       this.setState({
         answers: new Set()
       }, this.getRandomNumber);
     }
 
-    if(this.state.answers.has(pl)) {
+    if(this.state.answers.has(pl)) { /* If current word has been answered before, the component will try to find another one */
       this.getRandomNumber();
     } else {
       this.setState({
@@ -170,6 +171,7 @@ class Fiche extends React.Component {
   }
 
   disconnect() {
+    /* Firebase will be disconnected after the initial data download */
     Firebase.goOffline();
   }
 
