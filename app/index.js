@@ -77,7 +77,7 @@ var HelloWorld = React.createClass({
 // Fiche
 //---------------------------------------------------
 /* TOOD
-  1. Answer to lowercase
+  1. Answer to lowercase                         [x]
   2. Base of answered words
 */
 const fiche = document.getElementById('fiche');
@@ -122,13 +122,13 @@ class Fiche extends React.Component {
 
   setWords() {
     this.setState({
-      wordEn: this.state.data[this.state.random].en,
-      wordPl: this.state.data[this.state.random].pl
+      wordEn: this.state.data[this.state.random].en.toLowerCase(),
+      wordPl: this.state.data[this.state.random].pl.toLowerCase()
     })
   }
 
   checkWord(event) {
-    let answer = event.target.value;
+    let answer = event.target.value.toLowerCase();
     if(answer === this.state.wordPl) {
       setTimeout(() => { this.success(); }, 1000);
 
@@ -166,9 +166,10 @@ class Fiche extends React.Component {
           </p>
           <p>
             <input
-              class="fiche__input"
+              className="fiche__input"
               value={this.state.answer}
-              type="text" name="ficheText"
+              type="text"
+              name="ficheText"
               onChange={this.checkWord.bind(this)}
               id="ficheInput"
             />

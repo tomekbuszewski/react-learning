@@ -191,7 +191,7 @@
 	// Fiche
 	//---------------------------------------------------
 	/* TOOD
-	  1. Answer to lowercase
+	  1. Answer to lowercase                         [x]
 	  2. Base of answered words
 	*/
 	var fiche = document.getElementById('fiche');
@@ -247,8 +247,8 @@
 	    key: 'setWords',
 	    value: function setWords() {
 	      this.setState({
-	        wordEn: this.state.data[this.state.random].en,
-	        wordPl: this.state.data[this.state.random].pl
+	        wordEn: this.state.data[this.state.random].en.toLowerCase(),
+	        wordPl: this.state.data[this.state.random].pl.toLowerCase()
 	      });
 	    }
 	  }, {
@@ -256,7 +256,7 @@
 	    value: function checkWord(event) {
 	      var _this5 = this;
 
-	      var answer = event.target.value;
+	      var answer = event.target.value.toLowerCase();
 	      if (answer === this.state.wordPl) {
 	        setTimeout(function () {
 	          _this5.success();
@@ -316,7 +316,7 @@
 	            'p',
 	            null,
 	            _react2.default.createElement('input', {
-	              'class': 'fiche__input',
+	              className: 'fiche__input',
 	              value: this.state.answer,
 	              type: 'text', name: 'ficheText',
 	              onChange: this.checkWord.bind(this),
