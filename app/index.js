@@ -111,6 +111,8 @@ class Fiche extends React.Component {
         loaded: true,
         ficheInput: document.getElementById('ficheInput')
       }, this.getRandomNumber);
+
+      this.disconnect();
     });
   }
 
@@ -167,8 +169,8 @@ class Fiche extends React.Component {
     })
   }
 
-  componentWillUnmount() {
-    ficheServer.off();
+  disconnect() {
+    Firebase.goOffline();
   }
 
   render() {

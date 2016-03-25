@@ -192,7 +192,7 @@
 	//---------------------------------------------------
 	/* TOOD
 	  1. Answer to lowercase                         [x]
-	  2. Base of answered words
+	  2. Base of answered words                      [x]
 	*/
 	var fiche = document.getElementById('fiche');
 	var ficheServer = new _Firebase2.default('https://intense-torch-9229.firebaseio.com/');
@@ -234,6 +234,8 @@
 	          loaded: true,
 	          ficheInput: document.getElementById('ficheInput')
 	        }, _this4.getRandomNumber);
+
+	        _this4.disconnect();
 	      });
 	    }
 	  }, {
@@ -298,9 +300,9 @@
 	      });
 	    }
 	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      ficheServer.off();
+	    key: 'disconnect',
+	    value: function disconnect() {
+	      _Firebase2.default.goOffline();
 	    }
 	  }, {
 	    key: 'render',
