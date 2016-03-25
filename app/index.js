@@ -76,6 +76,10 @@ var HelloWorld = React.createClass({
 
 // Fiche
 //---------------------------------------------------
+/* TOOD
+  1. Answer to lowercase
+  2. Base of answered words
+*/
 const fiche = document.getElementById('fiche');
 const ficheServer = new Firebase('https://intense-torch-9229.firebaseio.com/');
 
@@ -89,7 +93,9 @@ class Fiche extends React.Component {
       data: null,
       wordPl: null,
       wordEn: null,
-      answer: null
+      answer: null,
+      ficheInput: null,
+      loaded: false
     }
   }
 
@@ -99,7 +105,9 @@ class Fiche extends React.Component {
 
       this.setState({
         words: ficheData.length,
-        data: ficheData
+        data: ficheData,
+        loaded: true,
+        ficheInput: document.getElementById('ficheInput')
       }, this.getRandomNumber);
     });
   }
@@ -122,19 +130,53 @@ class Fiche extends React.Component {
   checkWord(event) {
     let answer = event.target.value;
     if(answer === this.state.wordPl) {
-      this.getRandomNumber();
+      setTimeout(() => { this.success(); }, 1000);
+
+      this.setState({
+        loaded: false
+      })
     }
   }
 
+  success() {
+    this.state.ficheInput.value = '';
+    this.getRandomNumber();
+
+    this.setState({
+      loaded: true
+    })
+  }
+
+  componentWillUnmount() {
+    ficheServer.off();
+  }
+
   render() {
+    let containerClass = classNames({
+      'fiche': true,
+      'fiche--loaded': this.state.loaded
+    });
+
     return (
-      <section className="container">
-        <p>Słów w bazie: {this.state.words}</p>
-        <p>
-          <strong>{this.state.wordEn}</strong> to po polsku
-          <input value={this.state.answer} type="text" name="ficheText" onChange={this.checkWord.bind(this)} />
-        </p>
-        <button onClick={this.getRandomNumber.bind(this)}>Przeładuj</button>
+      <section className={containerClass}>
+        <p className="fiche__counter">Słów w bazie: {this.state.words}</p>
+        <form className="fiche__answer-field" action="">
+          <p>
+            <strong className="fiche__question">{this.state.wordEn}</strong> to po polsku
+          </p>
+          <p>
+            <input
+              class="fiche__input"
+              value={this.state.answer}
+              type="text" name="ficheText"
+              onChange={this.checkWord.bind(this)}
+              id="ficheInput"
+            />
+          </p>
+          <p>
+            <button type="button" className="fiche__reload" onClick={this.getRandomNumber.bind(this)}>Przeładuj</button>
+          </p>
+        </form>
       </section>
     )
   }

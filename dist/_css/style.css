@@ -1,12 +1,14 @@
-body {
-  background: #fafafa; }
-
 .container {
-  transition: .5s all;
-  min-height: 100px; }
+  display: flex;
+  height: 100vh;
+  justify-content: center; }
 
-.loading {
-  opacity: 0; }
-
-.loaded {
-  opacity: 1; }
+.fiche {
+  position: relative;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: .5s opacity, .5s transform;
+  max-width: 400px; }
+  .fiche--loaded {
+    transform: translateY(0);
+    opacity: 1; }

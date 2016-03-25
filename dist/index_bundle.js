@@ -190,6 +190,10 @@
 
 	// Fiche
 	//---------------------------------------------------
+	/* TOOD
+	  1. Answer to lowercase
+	  2. Base of answered words
+	*/
 	var fiche = document.getElementById('fiche');
 	var ficheServer = new _Firebase2.default('https://intense-torch-9229.firebaseio.com/');
 
@@ -207,7 +211,9 @@
 	      data: null,
 	      wordPl: null,
 	      wordEn: null,
-	      answer: null
+	      answer: null,
+	      ficheInput: null,
+	      loaded: false
 	    };
 	    return _this3;
 	  }
@@ -222,7 +228,9 @@
 
 	        _this4.setState({
 	          words: ficheData.length,
-	          data: ficheData
+	          data: ficheData,
+	          loaded: true,
+	          ficheInput: document.getElementById('ficheInput')
 	        }, _this4.getRandomNumber);
 	      });
 	    }
@@ -246,38 +254,84 @@
 	  }, {
 	    key: 'checkWord',
 	    value: function checkWord(event) {
+	      var _this5 = this;
+
 	      var answer = event.target.value;
 	      if (answer === this.state.wordPl) {
-	        this.getRandomNumber();
+	        setTimeout(function () {
+	          _this5.success();
+	        }, 1000);
+
+	        this.setState({
+	          loaded: false
+	        });
 	      }
+	    }
+	  }, {
+	    key: 'success',
+	    value: function success() {
+	      this.state.ficheInput.value = '';
+	      this.getRandomNumber();
+
+	      this.setState({
+	        loaded: true
+	      });
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      ficheServer.off();
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var containerClass = classNames({
+	        'fiche': true,
+	        'fiche--loaded': this.state.loaded
+	      });
+
 	      return _react2.default.createElement(
 	        'section',
-	        { className: 'container' },
+	        { className: containerClass },
 	        _react2.default.createElement(
 	          'p',
-	          null,
+	          { className: 'fiche__counter' },
 	          'Słów w bazie: ',
 	          this.state.words
 	        ),
 	        _react2.default.createElement(
-	          'p',
-	          null,
+	          'form',
+	          { className: 'fiche__answer-field', action: '' },
 	          _react2.default.createElement(
-	            'strong',
+	            'p',
 	            null,
-	            this.state.wordEn
+	            _react2.default.createElement(
+	              'strong',
+	              { className: 'fiche__question' },
+	              this.state.wordEn
+	            ),
+	            ' to po polsku'
 	          ),
-	          ' to po polsku',
-	          _react2.default.createElement('input', { value: this.state.answer, type: 'text', name: 'ficheText', onChange: this.checkWord.bind(this) })
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          { onClick: this.getRandomNumber.bind(this) },
-	          'Przeładuj'
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            _react2.default.createElement('input', {
+	              'class': 'fiche__input',
+	              value: this.state.answer,
+	              type: 'text', name: 'ficheText',
+	              onChange: this.checkWord.bind(this),
+	              id: 'ficheInput'
+	            })
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'button', className: 'fiche__reload', onClick: this.getRandomNumber.bind(this) },
+	              'Przeładuj'
+	            )
+	          )
 	        )
 	      );
 	    }
